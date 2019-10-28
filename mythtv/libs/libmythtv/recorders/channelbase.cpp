@@ -692,7 +692,7 @@ ChannelBase *ChannelBase::CreateChannel(
     QString                  &rbFileExt,
     bool                      setchan)
 {
-    rbFileExt = "ts";
+    rbFileExt = "mpg";
 
     ChannelBase *channel = nullptr;
     if (genOpt.inputtype == "DVB")
