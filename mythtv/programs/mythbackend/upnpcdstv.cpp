@@ -537,7 +537,7 @@ bool UPnpCDSTv::LoadTitles(const UPnpCDSRequest* pRequest,
     MSqlQuery query(MSqlQuery::InitCon(MSqlQuery::kDedicatedConnection));
 
     QString sql = "SELECT SQL_CALC_FOUND_ROWS "
-                  "r.title, r.inetref, r.recordedid, COUNT(*) "
+                  "r.title, r.inetref, r.recordedid, COUNT(*),CONCAT( r.title, ': ', r.subtitle) as titleSubtitle "
                   "FROM recorded r "
                   "LEFT JOIN recgroups g ON r.recgroup=g.recgroup "
                   "%1 " // WHERE clauses
@@ -562,8 +562,9 @@ bool UPnpCDSTv::LoadTitles(const UPnpCDSRequest* pRequest,
         QString sInetRef = query.value(1).toString();
         int nRecordingID = query.value(2).toInt();
         int nTitleCount = query.value(3).toInt();
+	QString sTitleSubtitle = query.value(4).toString();
 
-         if (nTitleCount > 1)
+         if (nTitleCount > 0)
          {
             // TODO Album or plain old container?
             CDSObject* pContainer = CDSObject::CreateAlbum( CreateIDString(sRequestId, "Title", sTitle),

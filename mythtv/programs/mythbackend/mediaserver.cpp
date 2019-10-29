@@ -248,15 +248,15 @@ void MediaServer::Init(bool bIsMaster, bool bDisableUPnp /* = false */)
 
             RegisterExtension(new UPnpCDSTv());
 
-            LOG(VB_UPNP, LOG_INFO,
-                "MediaServer: Registering UPnpCDSMusic Extension");
+            //LOG(VB_UPNP, LOG_INFO,
+            //    "MediaServer: Registering UPnpCDSMusic Extension");
 
-            RegisterExtension(new UPnpCDSMusic());
+            //RegisterExtension(new UPnpCDSMusic());
 
-            LOG(VB_UPNP, LOG_INFO,
-                "MediaServer: Registering UPnpCDSVideo Extension");
+            //LOG(VB_UPNP, LOG_INFO,
+            //    "MediaServer: Registering UPnpCDSVideo Extension");
 
-            RegisterExtension(new UPnpCDSVideo());
+            //RegisterExtension(new UPnpCDSVideo());
         }
 
 #if 0
