@@ -182,16 +182,16 @@ void UPnpCDSTv::CreateRoot()
     // -----------------------------------------------------------------------
     // By Film
     // -----------------------------------------------------------------------
-    pContainer = CDSObject::CreateContainer ( containerId.arg("Movie"),
-                                              QObject::tr("Movies"),
-                                              m_sExtensionId, // Parent Id
-                                              nullptr );
+    //pContainer = CDSObject::CreateContainer ( containerId.arg("Movie"),
+    //                                          QObject::tr("Movies"),
+    //                                          m_sExtensionId, // Parent Id
+    //                                          nullptr );
     // HACK
-    LoadMovies(pRequest, pResult, tokens);
-    pContainer->SetChildCount(pResult->m_nTotalMatches);
-    pContainer->SetChildContainerCount(0);
+    //LoadMovies(pRequest, pResult, tokens);
+    //pContainer->SetChildCount(pResult->m_nTotalMatches);
+    //pContainer->SetChildContainerCount(0);
     // END HACK
-    m_pRoot->AddChild(pContainer);
+    //m_pRoot->AddChild(pContainer);
 
     // -----------------------------------------------------------------------
     // By Title
@@ -240,30 +240,30 @@ void UPnpCDSTv::CreateRoot()
     // -----------------------------------------------------------------------
     // By Channel
     // -----------------------------------------------------------------------
-    pContainer = CDSObject::CreateContainer ( containerId.arg("Channel"),
-                                              QObject::tr("Channel"),
-                                              m_sExtensionId, // Parent Id
-                                              nullptr );
+    //pContainer = CDSObject::CreateContainer ( containerId.arg("Channel"),
+    //                                          QObject::tr("Channel"),
+    //                                          m_sExtensionId, // Parent Id
+    //                                          nullptr );
     // HACK
-    LoadChannels(pRequest, pResult, tokens);
-    pContainer->SetChildCount(pResult->m_nTotalMatches);
-    pContainer->SetChildContainerCount(pResult->m_nTotalMatches);
+    //LoadChannels(pRequest, pResult, tokens);
+    //pContainer->SetChildCount(pResult->m_nTotalMatches);
+    //pContainer->SetChildContainerCount(pResult->m_nTotalMatches);
     // END HACK
-    m_pRoot->AddChild(pContainer);
+    //m_pRoot->AddChild(pContainer);
 
     // -----------------------------------------------------------------------
     // By Recording Group
     // -----------------------------------------------------------------------
-    pContainer = CDSObject::CreateContainer ( containerId.arg("Recgroup"),
-                                              QObject::tr("Recording Group"),
-                                              m_sExtensionId, // Parent Id
-                                              nullptr );
+    //pContainer = CDSObject::CreateContainer ( containerId.arg("Recgroup"),
+    //                                          QObject::tr("Recording Group"),
+    //                                          m_sExtensionId, // Parent Id
+    //                                          nullptr );
     // HACK
-    LoadRecGroups(pRequest, pResult, tokens);
-    pContainer->SetChildCount(pResult->m_nTotalMatches);
-    pContainer->SetChildContainerCount(pResult->m_nTotalMatches);
+    //LoadRecGroups(pRequest, pResult, tokens);
+    //pContainer->SetChildCount(pResult->m_nTotalMatches);
+    //pContainer->SetChildContainerCount(pResult->m_nTotalMatches);
     // END HACK
-    m_pRoot->AddChild(pContainer);
+    //m_pRoot->AddChild(pContainer);
 
     // -----------------------------------------------------------------------
 
@@ -624,12 +624,12 @@ bool UPnpCDSTv::LoadDates(const UPnpCDSRequest* pRequest,
     MSqlQuery query(MSqlQuery::InitCon(MSqlQuery::kDedicatedConnection));
 
     QString sql = "SELECT SQL_CALC_FOUND_ROWS "
-                  "r.starttime, COUNT(r.recordedid) "
+                  "CONVERT_TZ(r.starttime, 'UTC', 'SYSTEM') as starttime_local, COUNT(r.recordedid) "
                   "FROM recorded r "
                   "LEFT JOIN recgroups g ON g.recgroup=r.recgroup "
                   "%1 " // WHERE clauses
-                  "GROUP BY DATE(CONVERT_TZ(r.starttime, 'UTC', 'SYSTEM')) "
-                  "ORDER BY r.starttime DESC "
+                  "GROUP BY DATE(starttime_local) "
+                  "ORDER BY starttime_local DESC "
                   "LIMIT :OFFSET,:COUNT";
 
     QStringList clauses;
