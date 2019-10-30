@@ -266,7 +266,6 @@ class UPNP_PUBLIC CDSObject : public ReferenceCounter
         static  CDSObject *CreatePlaylistItem     ( QString sId, QString sTitle, QString sParentId, CDSObject *pObject = nullptr );
         static  CDSObject *CreateTextItem         ( QString sId, QString sTitle, QString sParentId, CDSObject *pObject = nullptr );
         static  CDSObject *CreateAlbum            ( QString sId, QString sTitle, QString sParentId, CDSObject *pObject = nullptr );
-        static  CDSObject *CreateTVfolder         ( QString sId, QString sTitle, QString sTitleSubtitle, QString sParentId, CDSObject *pObject = nullptr );
         static  CDSObject *CreateMusicAlbum       ( QString sId, QString sTitle, QString sParentId, CDSObject *pObject = nullptr );
         static  CDSObject *CreatePhotoAlbum       ( QString sId, QString sTitle, QString sParentId, CDSObject *pObject = nullptr );
         static  CDSObject *CreateGenre            ( QString sId, QString sTitle, QString sParentId, CDSObject *pObject = nullptr );
