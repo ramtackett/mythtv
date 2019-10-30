@@ -811,6 +811,36 @@ CDSObject *CDSObject::CreateTextItem( QString sId, QString sTitle, QString sPare
 
 /////////////////////////////////////////////////////////////////////////////
 
+CDSObject *CDSObject::CreateTVfolder( QString sId, QString sTitle, QString sTitleSubtitle, QString sParentId, CDSObject *pObject )
+{
+    if (pObject == nullptr)
+    {
+        //pObject = new CDSObject( sId, sTitleSubtitle, sParentId ); // names the folder as Title: Subtitle
+        pObject = new CDSObject( sId, sTitle, sParentId );
+        pObject->m_sClass = "object.container.album";
+    }
+
+    CreateContainer( sId, sTitle, sParentId, pObject );
+    //CreateContainer( sId, sTitleSubtitle, sParentId, pObject );
+
+    pObject->AddProperty( new Property( "storageMedium"  , "upnp" ));
+    pObject->AddProperty( new Property( "publisher"      , "dc"   ));
+    pObject->AddProperty( new Property( "contributor"    , "dc"   ));
+    pObject->AddProperty( new Property( "relation"       , "dc"   ));
+    pObject->AddProperty( new Property( "rights"         , "dc"   ));
+
+    // Artwork
+    pObject->AddProperty( new Property( "albumArtURI", "upnp", false, "", true)); // TN
+    pObject->AddProperty( new Property( "albumArtURI", "upnp", false, "", true)); // SM
+    pObject->AddProperty( new Property( "albumArtURI", "upnp", false, "", true)); // MED
+    pObject->AddProperty( new Property( "albumArtURI", "upnp", false, "", true)); // LRG
+
+    return( pObject );
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+
 CDSObject *CDSObject::CreateAlbum( QString sId, QString sTitle, QString sParentId, CDSObject *pObject )
 {
     if (pObject == nullptr)

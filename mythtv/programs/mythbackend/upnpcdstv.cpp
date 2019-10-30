@@ -537,7 +537,7 @@ bool UPnpCDSTv::LoadTitles(const UPnpCDSRequest* pRequest,
     MSqlQuery query(MSqlQuery::InitCon(MSqlQuery::kDedicatedConnection));
 
     QString sql = "SELECT SQL_CALC_FOUND_ROWS "
-                  "r.title, r.inetref, r.recordedid, COUNT(*),CONCAT( r.title, ': ', r.subtitle) as titleSubtitle "
+                  "r.title, r.inetref, r.recordedid, COUNT(*) "
                   "FROM recorded r "
                   "LEFT JOIN recgroups g ON r.recgroup=g.recgroup "
                   "%1 " // WHERE clauses
@@ -562,7 +562,6 @@ bool UPnpCDSTv::LoadTitles(const UPnpCDSRequest* pRequest,
         QString sInetRef = query.value(1).toString();
         int nRecordingID = query.value(2).toInt();
         int nTitleCount = query.value(3).toInt();
-	QString sTitleSubtitle = query.value(4).toString();
 
          if (nTitleCount > 0)
          {
@@ -966,7 +965,8 @@ bool UPnpCDSTv::LoadRecordings(const UPnpCDSRequest* pRequest,
                   "c.default_authority, c.name, "
                   "r.recordedid, r.transcoded, p.videoprop+0, p.audioprop+0, "
                   "f.video_codec, f.audio_codec, f.fps, f.width, f.height, "
-                  "f.container "
+                  "f.container, CONCAT(r.title, ': ', r.subtitle) as titleSubtitle "
+		  ",CONVERT_TZ(r.starttime, 'UTC', 'SYSTEM') as starttime_local "
                   "FROM recorded r "
                   "LEFT JOIN channel c ON r.chanid=c.chanid "
                   "LEFT JOIN recordedprogram p ON p.chanid=r.chanid "
@@ -1045,6 +1045,9 @@ bool UPnpCDSTv::LoadRecordings(const UPnpCDSRequest* pRequest,
         int            nVideoHeight = query.value(34).toInt();
         QString        sContainer   = query.value(35).toString();
 
+	QString	       sTitleSubtitle = query.value(36).toString(); 
+        QDateTime      dtStartTimeLocal  = MythDate::as_utc(query.value(37).toDateTime());
+
         // ----------------------------------------------------------------------
         // Cache Host ip Address & Port
         // ----------------------------------------------------------------------
@@ -1065,7 +1068,7 @@ bool UPnpCDSTv::LoadRecordings(const UPnpCDSRequest* pRequest,
         URIBase.setPort(m_mapBackendPort[sHostName]);
 
         CDSObject *pItem = CDSObject::CreateVideoItem( CreateIDString(sRequestId, "Recording", nRecordedId),
-                                                       sTitle,
+                                                       sTitleSubtitle,
                                                        pRequest->m_sParentId );
 
         // Only add the reference ID for items which are not in the
@@ -1155,7 +1158,8 @@ bool UPnpCDSTv::LoadRecordings(const UPnpCDSRequest* pRequest,
             pItem->SetPropValue( "programID", sProgramId, sIdType );
         }
 
-        pItem->SetPropValue( "date"          , UPnPDateTime::DateTimeFormat(dtStartTime));
+        //pItem->SetPropValue( "date"          , UPnPDateTime::DateTimeFormat(dtStartTime));
+        pItem->SetPropValue( "date"          , UPnPDateTime::DateTimeFormat(dtStartTimeLocal));
         pItem->SetPropValue( "creator"       , "MythTV" );
 
         // Bookmark support
